@@ -1,6 +1,7 @@
 # Importing essential libraries and modules
 
-from flask import Flask, render_template, request, Markup, redirect
+from flask import Flask, render_template, request, Markup, redirect, url_for, session
+from flask_login import current_user, login_user, logout_user, login_required
 import numpy as np
 import pandas as pd
 from utils.disease import disease_dic
