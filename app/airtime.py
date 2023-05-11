@@ -2,7 +2,6 @@ import africastalking
 from app import app
 
 
-
 def send_airtime():
     username = app.config['AT_USERNAME']
     api_key = app.config['AFRICASTALKING_API_KEY']
