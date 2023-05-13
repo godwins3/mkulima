@@ -1,7 +1,19 @@
-from django.db import models
+from flask import current_app
+from flask_pymongo import PyMongo
 
-# Create your models here.
-class Text(models.Model):
-    text = models.TextField()
-    def __str__(self):
-        return self.text
+mongo = PyMongo(current_app)
+
+class Text:
+    def __init__(self, text):
+        self.text = text
+
+    def save(self):
+        texts = mongo.db.texts
+        texts.insert_one({
+            'text': self.text
+        })
+
+    @classmethod
+    def find_all(cls):
+        texts = mongo.db.texts
+        return texts.find()
