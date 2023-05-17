@@ -271,6 +271,14 @@ def translation():
     return render_template('translator/index.html', title=title)
 
 # ===============================================================================================
+# Create txt2sp endpoint
+@app.route('/{user_id}/txt2sp')
+def txt2sp():
+    title = 'mkulima - txt2sp'
+
+    return render_template('txt2sp/index.html', title=title)
+
+# ===============================================================================================
 # add mpesa payment intergrations
 @app.route('/lipa-na-mpesa')
 def lipa_na_mpesa(id):    
