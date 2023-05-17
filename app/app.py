@@ -1,6 +1,9 @@
 # Importing essential libraries and modules
 
 from flask import Flask, render_template, request, Markup, redirect, url_for, session
+from flask_login import login_user, logout_user, login_required
+from utils.user import User  # Assuming you have a User model defined in utils.user
+
 from flask_login import current_user, login_user, logout_user, login_required
 import numpy as np
 import pandas as pd
@@ -139,9 +142,77 @@ def home():
     title = 'mkulima - Home'
     return render_template('index.html', title=title)
 
+# ===============================================================================================
+# render authentication routes
+
+# Login endpoint
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    title = 'mkulima - Login'
+    
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        
+        # Perform authentication
+        user = User.authenticate(email, password)  # Assuming you have an authenticate method in your User model
+        
+        if user is not None:
+            # Log the user in and redirect to a protected page
+            login_user(user)
+            return redirect(url_for('protected_page'))
+        else:
+            # Authentication failed, show an error message
+            error_message = 'Invalid email or password'
+            return render_template('login.html', title=title, error_message=error_message)
+    
+    # GET request, show the login form
+    return render_template('login.html', title=title)
+
+# Signup endpoint
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    title = 'mkulima - Signup'
+    
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        
+        # Perform user registration
+        user = User(email, password)  # Assuming you have a User model with a constructor that takes email and password
+        
+        # Save the user to the database or perform any necessary validation
+        
+        # Log the user in after successful registration
+        login_user(user)
+        
+        # Redirect to a protected page
+        return redirect(url_for('protected_page'))
+    
+    # GET request, show the signup form
+    return render_template('signup.html', title=title)
+
+# Protected page endpoint
+@app.route('/protected')
+@login_required  # Only accessible for authenticated users
+def protected_page():
+    title = 'mkulima - Protected Page'
+    
+    # Access the current logged-in user with current_user
+    
+    return render_template('protected.html', title=title)
+
+# Logout endpoint
+@app.route('/logout')
+@login_required  # Only accessible for authenticated users
+def logout():
+    logout_user()
+    
+    # Redirect to the home page or any other desired page
+    return redirect(url_for('home'))
+
+
 # render crop recommendation form page
-
-
 @ app.route('/crop-recommend')
 def crop_recommend():
     title = 'mkulima - Crop Recommendation'
@@ -262,6 +333,24 @@ def disease_prediction():
             pass
     return render_template('disease.html', title=title)
 
+# ===============================================================================================
+# Render translation templates
+@app.route('/{user_id}/translations')
+def translation():
+    title = 'mkulima - translator'
+
+    return render_template('translator/index.html', title=title)
+
+# ===============================================================================================
+# Create txt2sp endpoint
+@app.route('/{user_id}/txt2sp')
+def txt2sp():
+    title = 'mkulima - txt2sp'
+
+    return render_template('txt2sp/index.html', title=title)
+
+# ===============================================================================================
+# add mpesa payment intergrations
 @app.route('/lipa-na-mpesa')
 def lipa_na_mpesa(id):    
     access_token = mpesa.MpesaAccessToken.validated_mpesa_access_token
