@@ -262,6 +262,16 @@ def disease_prediction():
             pass
     return render_template('disease.html', title=title)
 
+# ===============================================================================================
+# Render translation templates
+@app.route('/{user_id}/translations')
+def translation():
+    title = 'mkulima - translator'
+
+    return render_template('translator/index.html', title=title)
+
+# ===============================================================================================
+# add mpesa payment intergrations
 @app.route('/lipa-na-mpesa')
 def lipa_na_mpesa(id):    
     access_token = mpesa.MpesaAccessToken.validated_mpesa_access_token
