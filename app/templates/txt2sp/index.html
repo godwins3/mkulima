@@ -1,15 +1,15 @@
+{%extend {{ url_for('templates', filename='layout.html') }}%}
+{% block body %}
+<body>
+  <form method="POST" action="">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    {{ form }}
+    <input type="submit" value="Submit">
+  </form>
 
-<head><title> This is a Text Synthesizer </title></head>
-
-
-<form method="POST" action="">
-  {% csrf_token %}
-  {{ Form.as_p }}
-  <input type="submit" value="Submit">
-</form>
-
-
-<audio controls>
-  <source src="{{ dir }}" type="audio/mp3">
-  Your browser does not support the audio element.
-</audio>
+  <audio controls>
+    <source src="{{ dir }}" type="audio/mp3">
+    Your browser does not support the audio element.
+  </audio>
+</body>
+{% endblock %}
